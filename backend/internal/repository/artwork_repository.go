@@ -61,6 +61,23 @@ func (r *ArtworkRepository) List(ctx context.Context, onlyPublished bool, artist
 	return list, nil
 }
 
+// ListByIDs 按 ID 列表实时查询作品，不做公开过滤（供就绪统计等内部评估使用）。
+func (r *ArtworkRepository) ListByIDs(ctx context.Context, ids []string) ([]model.Artwork, error) {
+	if len(ids) == 0 {
+		return []model.Artwork{}, nil
+	}
+	cursor, err := r.coll.Find(ctx, bson.M{"_id": bson.M{"$in": ids}})
+	if err != nil {
+		return nil, fmt.Errorf("list artworks by ids: %w", err)
+	}
+	defer cursor.Close(ctx)
+	list := []model.Artwork{}
+	if err := cursor.All(ctx, &list); err != nil {
+		return nil, fmt.Errorf("decode artworks: %w", err)
+	}
+	return list, nil
+}
+
 func (r *ArtworkRepository) Update(ctx context.Context, a *model.Artwork) error {
 	_, err := r.coll.ReplaceOne(ctx, bson.M{"_id": a.ID}, a)
 	if err != nil {

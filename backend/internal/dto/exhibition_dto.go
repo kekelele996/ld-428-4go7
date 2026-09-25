@@ -15,3 +15,20 @@ type ExhibitionCreateRequest struct {
 type ExhibitionStatusRequest struct {
 	Status string `json:"status" binding:"required,oneof=Planning Active Ended Archived"`
 }
+
+// ExhibitionReadinessResponse 展览公开就绪评估结果。
+type ExhibitionReadinessResponse struct {
+	ExhibitionID       string   `json:"exhibitionId"`
+	TotalArtworks      int      `json:"totalArtworks"`
+	PublicReadyCount   int      `json:"publicReadyCount"`
+	PendingReviewCount int      `json:"pendingReviewCount"`
+	RejectedCount      int      `json:"rejectedCount"`
+	DraftCount         int      `json:"draftCount"`
+	SoldCount          int      `json:"soldCount"`
+	ArchivedCount      int      `json:"archivedCount"`
+	NoImageCount       int      `json:"noImageCount"`
+	MissingCount       int      `json:"missingCount"`
+	ReadyRatio         float64  `json:"readyRatio"`
+	Ready              bool     `json:"ready"`
+	BlockingReasons    []string `json:"blockingReasons"`
+}

@@ -13,3 +13,19 @@ export interface Exhibition {
   status: ExhibitionStatus;
   visitors: number;
 }
+
+export interface ExhibitionReadiness {
+  exhibitionId: string;
+  totalArtworks: number;
+  publicReadyCount: number;
+  pendingReviewCount: number;
+  rejectedCount: number;
+  draftCount: number;
+  soldCount: number;
+  archivedCount: number;
+  noImageCount: number;
+  missingCount: number;
+  readyRatio: number;
+  ready: boolean;
+  blockingReasons: string[];
+}

@@ -39,6 +39,16 @@ func (h *ExhibitionHandler) Get(c *gin.Context) {
 	util.OK(c, e)
 }
 
+// Readiness 展览公开就绪评估：实时统计关联作品，异常作为阻断原因返回。
+func (h *ExhibitionHandler) Readiness(c *gin.Context) {
+	res, err := h.svc.Readiness(context.Background(), c.Param("id"))
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	util.OK(c, res)
+}
+
 func (h *ExhibitionHandler) Create(c *gin.Context) {
 	var req dto.ExhibitionCreateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

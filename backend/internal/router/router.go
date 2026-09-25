@@ -73,6 +73,7 @@ func NewRouter(cfg *config.Config, logger *slog.Logger, db *mongo.Database, hs *
 			public.GET("/artworks/:id", hs.Artwork.Get)
 			public.GET("/exhibitions", hs.Exhibition.List)
 			public.GET("/exhibitions/:id", hs.Exhibition.Get)
+			public.GET("/exhibitions/:id/readiness", hs.Exhibition.Readiness)
 			public.GET("/artists", hs.Artist.List)
 			public.GET("/artists/:id", hs.Artist.Get)
 			public.GET("/interactions", hs.Interaction.List)

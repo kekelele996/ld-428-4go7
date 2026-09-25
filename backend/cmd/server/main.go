@@ -48,7 +48,7 @@ func main() {
 	authSvc := service.NewAuthService(userRepo, log, cfg)
 	artistSvc := service.NewArtistService(artistRepo, log)
 	artworkSvc := service.NewArtworkService(artworkRepo, log)
-	exhibitionSvc := service.NewExhibitionService(exhibitionRepo, log)
+	exhibitionSvc := service.NewExhibitionService(exhibitionRepo, artworkRepo, log)
 	interactionSvc := service.NewInteractionService(interactionRepo, artworkRepo, log)
 	reviewSvc := service.NewReviewService(reviewRepo, log)
 	auditSvc := service.NewAuditLogService(auditRepo, log)

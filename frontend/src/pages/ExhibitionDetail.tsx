@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { ArtworkCard } from '../components/common/ArtworkCard';
 import { ExhibitionBanner } from '../components/common/ExhibitionBanner';
+import { ExhibitionReadinessPanel } from '../components/common/ExhibitionReadinessPanel';
 import { UserAvatar } from '../components/common/UserAvatar';
 import { useArtistStore } from '../stores/artistStore';
 import { useArtworkStore } from '../stores/artworkStore';
@@ -10,13 +11,19 @@ import { useEffect } from 'react';
 
 export function ExhibitionDetail() {
   const { id = '' } = useParams();
-  const { exhibitions, loadExhibitions } = useExhibitionStore();
+  const { exhibitions, readiness, readinessLoading, readinessError, loadExhibitions, loadReadiness } = useExhibitionStore();
   const { artworks, loadArtworks } = useArtworkStore();
   const { artists, loadArtists } = useArtistStore();
 
   useEffect(() => {
     void Promise.all([loadExhibitions(), loadArtworks(), loadArtists()]);
   }, [loadExhibitions, loadArtworks, loadArtists]);
+
+  useEffect(() => {
+    if (id) {
+      void loadReadiness(id);
+    }
+  }, [id, loadReadiness]);
 
   const exhibition = exhibitions.find((item) => item.id === id);
   const curator = exhibition ? artists.find((artist) => artist.id === exhibition.curatorId) : undefined;
@@ -36,7 +43,13 @@ export function ExhibitionDetail() {
             <p className="mt-6 text-sm leading-7 text-ink/65">{exhibition.visitors.toLocaleString()} 位线上观众访问了本展。</p>
           </aside>
           <div>
-            <h2 className="font-display text-4xl">展出作品</h2>
+            <ExhibitionReadinessPanel
+              readiness={readiness}
+              loading={readinessLoading}
+              error={readinessError}
+              onRetry={() => void loadReadiness(id)}
+            />
+            <h2 className="mt-10 font-display text-4xl">展出作品</h2>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               {exhibitionArtworks.map((artwork) => (
                 <ArtworkCard key={artwork.id} artwork={artwork} artist={artists.find((artist) => artist.id === artwork.artistId)} />
