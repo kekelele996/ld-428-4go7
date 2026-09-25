@@ -14,12 +14,13 @@ import (
 
 // ExhibitionService 展览业务逻辑。
 type ExhibitionService struct {
-	repo   *repository.ExhibitionRepository
-	logger *slog.Logger
+	repo        *repository.ExhibitionRepository
+	artworkRepo *repository.ArtworkRepository
+	logger      *slog.Logger
 }
 
-func NewExhibitionService(repo *repository.ExhibitionRepository, logger *slog.Logger) *ExhibitionService {
-	return &ExhibitionService{repo: repo, logger: logger}
+func NewExhibitionService(repo *repository.ExhibitionRepository, artworkRepo *repository.ArtworkRepository, logger *slog.Logger) *ExhibitionService {
+	return &ExhibitionService{repo: repo, artworkRepo: artworkRepo, logger: logger}
 }
 
 func (s *ExhibitionService) Create(ctx context.Context, e *model.Exhibition) (*model.Exhibition, error) {

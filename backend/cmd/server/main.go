@@ -48,19 +48,20 @@ func main() {
 	authSvc := service.NewAuthService(userRepo, log, cfg)
 	artistSvc := service.NewArtistService(artistRepo, log)
 	artworkSvc := service.NewArtworkService(artworkRepo, log)
-	exhibitionSvc := service.NewExhibitionService(exhibitionRepo, log)
+	exhibitionSvc := service.NewExhibitionService(exhibitionRepo, artworkRepo, log)
 	interactionSvc := service.NewInteractionService(interactionRepo, artworkRepo, log)
 	reviewSvc := service.NewReviewService(reviewRepo, log)
 	auditSvc := service.NewAuditLogService(auditRepo, log)
 
 	hs := &router.Handlers{
-		Auth:        handler.NewAuthHandler(authSvc),
-		Artwork:     handler.NewArtworkHandler(artworkSvc),
-		Exhibition:  handler.NewExhibitionHandler(exhibitionSvc),
-		Artist:      handler.NewArtistHandler(artistSvc),
-		Interaction: handler.NewInteractionHandler(interactionSvc),
-		Review:      handler.NewReviewHandler(reviewSvc),
-		Audit:       handler.NewAuditHandler(auditSvc),
+		Auth:                handler.NewAuthHandler(authSvc),
+		Artwork:             handler.NewArtworkHandler(artworkSvc),
+		Exhibition:          handler.NewExhibitionHandler(exhibitionSvc),
+		ExhibitionReadiness: handler.NewExhibitionReadinessHandler(exhibitionSvc),
+		Artist:              handler.NewArtistHandler(artistSvc),
+		Interaction:         handler.NewInteractionHandler(interactionSvc),
+		Review:              handler.NewReviewHandler(reviewSvc),
+		Audit:               handler.NewAuditHandler(auditSvc),
 	}
 
 	ginRouter := router.NewRouter(cfg, log, db, hs, auditSvc, artworkRepo, exhibitionRepo)

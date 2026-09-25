@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { ArtworkCard } from '../components/common/ArtworkCard';
 import { ExhibitionBanner } from '../components/common/ExhibitionBanner';
+import { ExhibitionReadinessPanel } from '../components/common/ExhibitionReadinessPanel';
 import { UserAvatar } from '../components/common/UserAvatar';
 import { useArtistStore } from '../stores/artistStore';
 import { useArtworkStore } from '../stores/artworkStore';
@@ -29,6 +30,9 @@ export function ExhibitionDetail() {
       <div className="mx-auto max-w-7xl px-6 py-6">
         <Link to="/gallery" className="text-sm text-ink/60 hover:text-clay">返回画廊</Link>
         <div className="mt-6"><ExhibitionBanner exhibition={exhibition} large /></div>
+        <div className="mt-8">
+          <ExhibitionReadinessPanel exhibitionId={exhibition.id} />
+        </div>
         <section className="mt-10 grid gap-8 lg:grid-cols-[260px_1fr]">
           <aside>
             <p className="text-sm uppercase tracking-[0.2em] text-ink/45">Curator</p>

@@ -128,6 +128,7 @@ npm run dev
 | PATCH | /api/v1/artworks/:id/review | 内容审核（Admin/Curator） |
 | GET | /api/v1/exhibitions | 展览列表 |
 | GET | /api/v1/exhibitions/:id | 展览详情 |
+| GET | /api/v1/exhibitions/:id/readiness | 展览公开展出就绪统计（按关联作品实时统计，见下） |
 | POST | /api/v1/exhibitions | 创建展览（Curator/Admin） |
 | PATCH | /api/v1/exhibitions/:id/status | 发布展览 |
 | POST | /api/v1/exhibitions/:id/artworks/:artworkId | 展览收录作品 |
@@ -140,6 +141,16 @@ npm run dev
 | GET | /api/v1/audit-logs | 操作日志（Admin/Curator） |
 
 演示账号：`lin / Artist@123`（艺术家林知微）、`chen / Artist@123`（艺术家陈序）、`viewer / Viewer@123`（观众）、`admin / Admin@123`（管理员）。
+
+### 展览就绪接口说明
+
+`GET /api/v1/exhibitions/:id/readiness` 按展览关联的作品实时统计，便于详情页判断"哪些作品会挡住公开"：
+
+- 统计字段：`total`（关联总数）、`readyCount`（可公开展出，即 Published + Approved + 有图）、`pendingCount`（待审核）、`soldCount`（已售）、`archivedCount`（已下架）、`noImageCount`（无图）、`readyRatio`（就绪比例 0~1）。
+- 结论：`ready`（是否全部就绪）、`isEmpty`（空展览）、`conclusion`（中文结论文案）。
+- `reasons` 为阻断原因列表，任何异常都会作为阻断原因返回（含缺失关联、草稿、待审核/驳回/标记、已售、下架、无图、未知状态），每项含 `code`、`message`、`count` 与命中的 `artworkIds`。
+- 空展览返回统计为 0 并给出说明；展览不存在返回 `404`；公开列表/详情仍按原审核规则，不受影响；前端该接口失败时只展示错误与重试入口，不回退模拟数据。
+
 
 ## 枚举出现位置清单
 

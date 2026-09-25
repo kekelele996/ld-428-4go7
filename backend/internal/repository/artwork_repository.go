@@ -39,6 +39,23 @@ func (r *ArtworkRepository) FindByID(ctx context.Context, id string) (*model.Art
 	return &a, nil
 }
 
+// FindByIDs 按 ID 列表批量查询；不存在的 ID 不会出现在结果中，调用方需自行比对缺失项。
+func (r *ArtworkRepository) FindByIDs(ctx context.Context, ids []string) ([]model.Artwork, error) {
+	list := []model.Artwork{}
+	if len(ids) == 0 {
+		return list, nil
+	}
+	cursor, err := r.coll.Find(ctx, bson.M{"_id": bson.M{"$in": ids}})
+	if err != nil {
+		return nil, fmt.Errorf("find artworks by ids: %w", err)
+	}
+	defer cursor.Close(ctx)
+	if err := cursor.All(ctx, &list); err != nil {
+		return nil, fmt.Errorf("decode artworks by ids: %w", err)
+	}
+	return list, nil
+}
+
 // List 列表；onlyPublished 时仅返回已发布且审核通过的作品。
 func (r *ArtworkRepository) List(ctx context.Context, onlyPublished bool, artistID string) ([]model.Artwork, error) {
 	filter := bson.M{}

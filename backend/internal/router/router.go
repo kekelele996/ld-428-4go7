@@ -17,13 +17,14 @@ import (
 
 // Handlers 汇聚所有处理器。
 type Handlers struct {
-	Auth        *handler.AuthHandler
-	Artwork     *handler.ArtworkHandler
-	Exhibition  *handler.ExhibitionHandler
-	Artist      *handler.ArtistHandler
-	Interaction *handler.InteractionHandler
-	Review      *handler.ReviewHandler
-	Audit       *handler.AuditHandler
+	Auth                *handler.AuthHandler
+	Artwork             *handler.ArtworkHandler
+	Exhibition          *handler.ExhibitionHandler
+	ExhibitionReadiness *handler.ExhibitionReadinessHandler
+	Artist              *handler.ArtistHandler
+	Interaction         *handler.InteractionHandler
+	Review              *handler.ReviewHandler
+	Audit               *handler.AuditHandler
 }
 
 // NewRouter 装配路由、CORS、限流、健康检查与鉴权。
@@ -73,6 +74,7 @@ func NewRouter(cfg *config.Config, logger *slog.Logger, db *mongo.Database, hs *
 			public.GET("/artworks/:id", hs.Artwork.Get)
 			public.GET("/exhibitions", hs.Exhibition.List)
 			public.GET("/exhibitions/:id", hs.Exhibition.Get)
+			public.GET("/exhibitions/:id/readiness", hs.ExhibitionReadiness.Get)
 			public.GET("/artists", hs.Artist.List)
 			public.GET("/artists/:id", hs.Artist.Get)
 			public.GET("/interactions", hs.Interaction.List)
